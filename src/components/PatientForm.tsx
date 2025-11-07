@@ -1,12 +1,13 @@
 import { useForm } from "react-hook-form"
 import Error from "./Error";
+import type { DraftPatient } from "../types";
 
 export default function PatientForm() {
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm<DraftPatient>();
 
-    const registerPatient = () => {
-        console.log("Paciente registrado");
+    const registerPatient = (data: DraftPatient) => {
+        console.log(data);
     }
   
   return (
@@ -37,7 +38,7 @@ export default function PatientForm() {
                       })}
                   />
                   {errors.name && (
-                    <Error>{errors.name?.message?.toString()}</Error> 
+                    <Error>{errors.name?.message}</Error> 
                   )}
               </div>
 
@@ -50,7 +51,13 @@ export default function PatientForm() {
                     className="w-full p-3  border border-gray-100"  
                     type="text" 
                     placeholder="Nombre del Propietario" 
+                    {...register('caretaker',{
+                      required: 'El nombre del propietario es obligatorio'
+                    })}
                 />
+                {errors.caretaker && (
+                    <Error>{errors.caretaker?.message}</Error>
+                )}
               </div>
 
             <div className="mb-5">
@@ -62,7 +69,17 @@ export default function PatientForm() {
                   className="w-full p-3  border border-gray-100"  
                   type="email" 
                   placeholder="Email de Registro" 
+                  {...register('email',{
+                    required: 'El email es obligatorio',
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: 'El email no es válido'
+                    }
+                  })}
               />
+              {errors.email && (
+                <Error>{errors.email?.message}</Error>
+              )}
             </div>
 
             <div className="mb-5">
@@ -73,7 +90,13 @@ export default function PatientForm() {
                     id="date"
                     className="w-full p-3  border border-gray-100"  
                     type="date" 
+                    {...register('date',{
+                      required: 'La fecha de alta es obligatoria'
+                    })}
                 />
+                {errors.date && (
+                  <Error>{errors.date?.message}</Error>
+                )}
             </div>
             
             <div className="mb-5">
@@ -84,7 +107,13 @@ export default function PatientForm() {
                     id="symptoms"
                     className="w-full p-3  border border-gray-100"  
                     placeholder="Síntomas del paciente" 
+                    {...register('symptoms',{
+                      required: 'Los síntomas son obligatorios'
+                    })}
                 ></textarea>
+                {errors.symptoms && (
+                  <Error>{errors.symptoms?.message}</Error>
+                )}
             </div>
 
             <input
